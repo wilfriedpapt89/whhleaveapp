@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="form1">
+			<p:growl id="msg" showSummary="true" showDetail="true" />
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card card-w-title">
+						<h1>Mon congé</h1>
+						<p:panelGrid columns="2" layout="grid"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:selectOneMenu value="#{demandeCongeBean.typeCongeSelected}"
+									style="width:100%">
+									<f:selectItems value="#{demandeCongeBean.typeCongesItems}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+
+							<h:panelGroup styleClass="md-inputfield">
+								<p:selectOneMenu value="#{demandeCongeBean.interimaireSelected}"
+									style="width:100%">
+									<f:selectItems value="#{demandeCongeBean.interimairesItems}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{demandeCongeBean.conge.debut}"
+									style="width:100%"></p:calendar>
+								<label>Début de congé</label>
+							</h:panelGroup>
+
+							<h:panelGroup styleClass="md-inputfield">
+								<p:calendar value="#{demandeCongeBean.conge.fin}"
+									style="width:100%"></p:calendar>
+								<label>Fin de congé</label>
+							</h:panelGroup>
+
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputTextarea style="width:100%"
+									value="#{demandeCongeBean.conge.motif}" />
+								<label>Motif du congé</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield" />
+							<p:panelGrid columns="2" layout="grid"
+								styleClass="ui-panelgrid-blank form-group">
+								<h:panelGroup styleClass="md-inputfield">
+									<p:button value="Réinitialiser" style="width:100%"
+										outcome="demandeconge" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:commandButton value="Enregistrer" style="width:100%"
+										action="#{demandeCongeBean.save()}" />
+								</h:panelGroup>
+							</p:panelGrid>
+						</p:panelGrid>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

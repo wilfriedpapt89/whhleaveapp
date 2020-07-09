@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="form">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card">
+						<h1>Mes rôles</h1>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-3" />
+							<div class="ui-g-12 ui-md-6 ui-lg-6">
+								<div class="ui-g">
+									<div class="ui-g-12">
+										<p:panelGrid styleClass="ui-panelgrid-blank form-group">
+											<h:panelGroup styleClass="md-inputfield">
+												<p:inputText id="nomRole" value="#{rolesBean.roles.nomRole}">
+													<f:validateLength minimum="3" maximum="50" />
+													<p:clientValidator event="blur" />
+												</p:inputText>
+												<p:message for="nomRole" display="text" />
+												<label>Nom du rôle</label>
+											</h:panelGroup>
+										</p:panelGrid>
+									</div>
+									<div class="ui-g-12">
+										<p:panelGrid styleClass="ui-panelgrid-blank form-group">
+											<h:panelGroup styleClass="md-inputfield">
+												<p:selectCheckboxMenu value="#{rolesBean.tachesSelected}"
+													multiple="true">
+													<f:selectItems value="#{rolesBean.tachesItems}" />
+												</p:selectCheckboxMenu>
+												<p:message for="nomRole" display="text" />
+												<label>Tâches du rôle</label>
+											</h:panelGroup>
+										</p:panelGrid>
+									</div>
+									<div class="ui-g-12 ui-lg-6">
+										<p:panelGrid styleClass="ui-panelgrid-blank form-group">
+											<p:commandButton validateClient="true" style="width:100%"
+												action="#{rolesBean.saveUpdate()}" value="Enregistrer" />
+										</p:panelGrid>
+									</div>
+
+								</div>
+							</div>
+							<div class="ui-g-12 ui-md-3 ui-lg-3" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

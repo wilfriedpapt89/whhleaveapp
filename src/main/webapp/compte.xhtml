@@ -1,0 +1,148 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="form1">
+			<p:growl id="msg" showSummary="true" showDetail="true" />
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card">
+						<h1>Créer mon compte</h1>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-lg-4">
+								<div class="profile">
+									<div class="profile-image"></div>
+								</div>
+							</div>
+
+							<div class="ui-g-12 ui-lg-8">
+								<div class="wizard-card-content active-content register">
+									<div class="ui-g">
+										<div class="ui-g-12 ui-lg-6">
+											<div class="forms">
+
+												<div class="ui-inputgroup willspace">
+													<span class="ui-inputgroup-addon"> <i
+														class="material-icons">account_circle</i>
+													</span>
+													<h:panelGroup styleClass="md-inputfield">
+														<p:inputText id="nom" required="true"
+															requiredMessage="Deux caractères minimum sont requis"
+															value="#{employeeBean.employee.nom}">
+															<f:validateLength minimum="2" maximum="50" />
+															<p:clientValidator event="blur" />
+														</p:inputText>
+														<label>NOM</label>
+														<p:message for="nom" display="text" />
+													</h:panelGroup>
+												</div>
+												<div class="willspace ui-inputgroup"
+													style="margin-bottom: 20px">
+													<span class="ui-inputgroup-addon"> <i
+														class="material-icons">public</i>
+													</span>
+													<p:selectOneMenu style="width:70%"
+														value="#{employeeBean.posteSelected}">
+														<f:selectItems value="#{employeeBean.postesSelectItems}" />
+													</p:selectOneMenu>
+												</div>
+												<div class="willspace ui-inputgroup"
+													style="margin-bottom: 20px">
+													<span class="ui-inputgroup-addon"> <i
+														class="material-icons">public</i>
+													</span>
+													<p:selectOneMenu style="width:70%"
+														value="#{employeeBean.referantSelected}">
+														<f:selectItems value="#{employeeBean.referantSelectItems}" />
+													</p:selectOneMenu>
+												</div>
+												<h:panelGroup id="telefon" layout="block"
+													styleClass="willspace ui-inputgroup">
+													<span class="ui-inputgroup-addon"> +257 </span>
+													<h:panelGroup styleClass="md-inputfield">
+														<p:inputText value="#{employeeBean.employee.telefon}">
+															<f:validateLength minimum="1" maximum="50" />
+															<p:clientValidator event="blur" />
+														</p:inputText>
+														<label>Téléphone</label>
+													</h:panelGroup>
+												</h:panelGroup>
+
+
+											</div>
+										</div>
+										<div class="ui-g-12 ui-lg-6">
+											<div class="forms">
+												<div class="willspace ui-inputgroup">
+													<span class="ui-inputgroup-addon"> <i
+														class="material-icons">account_circle</i>
+													</span>
+													<h:panelGroup styleClass="md-inputfield">
+														<p:inputText id="prenom"
+															value="#{employeeBean.employee.prenom}" required="true"
+															requiredMessage="Deux caractères minimum sont requis">
+															<f:validateLength minimum="2" maximum="50" />
+															<p:clientValidator event="blur" />
+														</p:inputText>
+														<label>PRENOM</label>
+														<p:message for="prenom" display="text" />
+													</h:panelGroup>
+												</div>
+												<div class="willspace ui-inputgroup">
+													<span class="ui-inputgroup-addon"> <i
+														class="material-icons">mail</i>
+													</span>
+													<h:panelGroup styleClass="md-inputfield">
+														<p:inputText value="#{employeeBean.employee.email}">
+															<f:validateLength minimum="1" maximum="50" />
+															<p:clientValidator event="blur" />
+														</p:inputText>
+														<label>Email</label>
+													</h:panelGroup>
+												</div>
+
+												<div class="willspace ui-inputgroup">
+													<span class="ui-inputgroup-addon"> <i
+														class="material-icons">account_box</i>
+													</span>
+													<h:panelGroup styleClass="md-inputfield">
+														<p:inputText value="#{employeeBean.employee.password}">
+															<f:validateLength minimum="1" maximum="50" />
+															<p:clientValidator event="blur" />
+														</p:inputText>
+														<label>Mot de passe</label>
+													</h:panelGroup>
+												</div>
+
+												<div class="willspace ui-inputgroup">
+													<span class="ui-inputgroup-addon"> <i
+														class="material-icons">account_box</i>
+													</span>
+													<h:panelGroup styleClass="md-inputfield">
+														<p:inputText value="#{employeeBean.employee.password}">
+															<f:validateLength minimum="1" maximum="50" />
+															<p:clientValidator event="blur" />
+														</p:inputText>
+														<label>Confirmer mon mot de passe</label>
+													</h:panelGroup>
+												</div>
+											</div>
+										</div>
+										<div class="ui-g-12">
+											<p:commandButton style="width:100%" value="Enregistrer"
+												action="#{employeeBean.save()}" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

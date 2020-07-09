@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<div class="card card-w-title">
+					<h1>Créer une nouvelle caisse</h1>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-md-4">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="namecaisse"
+									value="#{caisseBean.caisse.designation}" />
+								<p:outputLabel for="namecaisse" value="Nom de la caisse" />
+							</h:panelGroup>
+						</div>
+						<div class="ui-g-12 ui-md-4">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputNumber id="capitalcaisse" decimalSeparator="."
+									thousandSeparator="&#160;" decimalPlaces="2"
+									value="#{caisseBean.caisse.capital}" />
+								<p:outputLabel for="capitalcaisse"
+									value="Capital de départ(en FBU)" />
+							</h:panelGroup>
+						</div>
+						<div class="ui-g-12 ui-md-4">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputNumber id="montantaction" decimalSeparator="."
+									thousandSeparator="&#160;" decimalPlaces="2"
+									value="#{caisseBean.caisse.capital}" />
+								<p:outputLabel for="montantaction" value="Montant de l'action" />
+							</h:panelGroup>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

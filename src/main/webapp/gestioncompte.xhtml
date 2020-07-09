@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="form1">
+			<p:growl id="msg" showSummary=" true" showDetail="true" />
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card card-w-title">
+						<h1>Gestion des comptes utilisateurs</h1>
+						<p:tabView>
+							<p:tab title="Validation de compte">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-3" />
+									<div class="ui-g-12 ui-md-6">
+										<p:commandButton action="#{compteB.changeComptesStatus()}"
+											value="Activer le(s) compte(s) séléctionné(s)" />
+									</div>
+									<div class="ui-g-12 ui-md-3" />
+									<div class="ui-g-12">
+										<p:dataTable rows="10" paginatorAlwaysVisible="false"
+											emptyMessage="Pas de comptes à valider"
+											paginatorPosition="bottom" rowKey="#{compte.id}"
+											selectionMode="multiple"
+											selection="#{compteB.comptesNoValidesSelecteds}" var="compte"
+											value="#{compteB.comptesNoValides}">
+											<f:facet name="header">
+											Comptes non activés
+											</f:facet>
+											<p:column headerText="Nom">
+												<h:outputText value="#{compte.nom}" />
+											</p:column>
+											<p:column headerText="Prénom">
+												<h:outputText value="#{compte.prenom}" />
+											</p:column>
+											<p:column headerText="Email">
+												<h:outputText value="#{compte.email}" />
+											</p:column>
+											<p:column headerText="Poste">
+												<h:outputText value="#{compte.poste.designation}" />
+											</p:column>
+											<p:column headerText="Référant">
+												<h:outputText rendered="#{!empty compte.referant}"
+													value="#{compte.referant.nom.concat(compte.referant.prenom)}" />
+												<h:outputText rendered="#{empty compte.referant}"
+													value="Pas de référant" />
+											</p:column>
+
+										</p:dataTable>
+
+									</div>
+								</div>
+							</p:tab>
+							<p:tab title="Tous les comptes ">
+								<div class="ui-g-12">
+									<p:dataTable rows="10" paginatorAlwaysVisible="false"
+										paginatorPosition="bottom" rowKey="#{compte.id}" var="compte"
+										value="#{compteB.allComptes}">
+										<f:facet name="header">
+											Tous les comptes
+											</f:facet>
+										<p:column headerText="Nom">
+											<h:outputText value="#{compte.nom}" />
+										</p:column>
+										<p:column headerText="Prénom">
+											<h:outputText value="#{compte.prenom}" />
+										</p:column>
+										<p:column headerText="Email">
+											<h:outputText value="#{compte.email}" />
+										</p:column>
+										<p:column headerText="Poste">
+											<h:outputText value="#{compte.poste.designation}" />
+										</p:column>
+										<p:column headerText="Référant">
+											<h:outputText rendered="#{!empty compte.referant}"
+												value="#{compte.referant.nom.concat(compte.referant.prenom)}" />
+											<h:outputText rendered="#{empty compte.referant}"
+												value="Pas de référant" />
+										</p:column>
+
+									</p:dataTable>
+
+								</div>
+							</p:tab>
+							<p:tab title="Comptes 
+							
+							suspendus">
+								<div class="ui-g-12">
+									<p:dataTable rows="10" paginatorAlwaysVisible="false"
+										paginatorPosition="bottom" rowKey="#{compte.id}"
+										selectionMode="multiple"
+										selection="#{compteB.compteSuspsendusSelecteds}" var="compte"
+										value="#{compteB.compteSuspsendus}">
+										<f:facet name="header">
+											Tous les comptes suspendus
+											</f:facet>
+										<p:column headerText="Nom">
+											<h:outputText value="#{compte.nom}" />
+										</p:column>
+										<p:column headerText="Prénom">
+											<h:outputText value="#{compte.prenom}" />
+										</p:column>
+										<p:column headerText="Email">
+											<h:outputText value="#{compte.email}" />
+										</p:column>
+										<p:column headerText="Poste">
+											<h:outputText value="#{compte.poste.designation}" />
+										</p:column>
+										<p:column headerText="Référant">
+											<h:outputText rendered="#{!empty compte.referant}"
+												value="#{compte.referant.nom.concat(compte.referant.prenom)}" />
+											<h:outputText rendered="#{empty compte.referant}"
+												value="Pas de référant" />
+										</p:column>
+
+									</p:dataTable>
+
+								</div>
+							</p:tab>
+						</p:tabView>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,169 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Dashboard</ui:define>
+
+	<ui:define name="head">
+		<script type="text/javascript">
+            //<![CDATA[
+            function skinChart() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#FFC107', '#03A9F4'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#EEEEEE',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#212121'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+            //]]>  
+        </script>
+		<style type="text/css">
+.main-content {
+	padding: 0;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form1">
+			<p:poll onstart="checkNotification()" interval="10" autoStart="true"
+				partialSubmit="true" process="@this">
+
+			</p:poll>
+			<p:remoteCommand name="checkNotification" immediate="true"
+				action="#{aceuilBean.checkNotification()}" />
+			<div class="ui-g dashboard">
+				<div class="ui-g-12">
+					<div class="card no-margin">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-4">
+								<div class="ui-g card colorbox colorbox-1">
+									<div class="ui-g-4">
+										<i class="material-icons">&#xE86C;</i>
+									</div>
+									<h:panelGroup id="analysedemande" layout="block"
+										styleClass="ui-g-8">
+										<span class="colorbox-name">Demandes à analyser</span>
+										<span class="colorbox-count">#{aceuilBean.allDemandesSentToMeSize}</span>
+									</h:panelGroup>
+								</div>
+							</div>
+
+							<div class="ui-g-12 ui-md-4">
+								<div class="ui-g card colorbox colorbox-2">
+									<div class="ui-g-4">
+										<i class="material-icons">&#xE86C;</i>
+									</div>
+									<div class="ui-g-8">
+										<span class="colorbox-name">Mon congé</span> <span
+											style="color: white">#{aceuilBean.monCongeStatut}</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="ui-g-12 ui-md-4">
+								<div class="ui-g card colorbox colorbox-3">
+									<div class="ui-g-4">
+										<i class="material-icons">&#xE86C;</i>
+									</div>
+									<div class="ui-g-8">
+										<span class="colorbox-name">Demande d'intérimat</span> <span
+											class="colorbox-count" style="font-weight: 50%">#{aceuilBean.interimatStatut}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ui-g-12">
+					<div class="ui-g">
+
+						<div class="ui-g-12 ui-md-6">
+							<p:panel header="Mon congé"></p:panel>
+						</div>
+						<div class="ui-g-12 ui-md-6">
+							<p:panel header="Mon intérimat"></p:panel>
+						</div>
+						<div class="ui-g-12 ui-fluid">
+							<p:panel header="Demande(s) à analyser" id="mesdemandes">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-md-8">
+										<p:dataTable var="dem" rowKey="#{dem.id}"
+											value="#{aceuilBean.allDemandesSentToMe}"
+											selection="#{aceuilBean.congeSelected}"
+											selectionMode="single"
+											emptyMessage="Pas de demandes à analyser">
+											<p:ajax event="rowSelect" update="form1:detaildemande" />
+											<p:column headerText="Démander par">
+												<h:outputText value="#{dem.employee.nom.concat(' ')}" />
+												<h:outputText value="#{dem.employee.prenom}" />
+											</p:column>
+											<p:column headerText="Du">
+												<h:outputText value="#{dem.debut}" />
+											</p:column>
+											<p:column headerText="Au">
+												<h:outputText value="#{dem.fin}" />
+											</p:column>
+											<p:column headerText="Intérimat">
+												<h:outputText value="#{dem.interimat.nom.concat(' ')}" />
+												<h:outputText value="#{dem.interimat.prenom}" />
+											</p:column>
+										</p:dataTable>
+									</div>
+									<h:panelGroup id="detaildemande" layout="block"
+										styleClass="ui-g-12 ui-md-4">
+										<div class="ui-g">
+											<div class="ui-g-12">
+												<h:outputText rendered="#{empty aceuilBean.congeSelected}"
+													value="Pas de demande séléctionnée" />
+											</div>
+											<div class="ui-g-12">
+												<h:outputText rendered="#{!empty aceuilBean.congeSelected}"
+													value="Date de dépôt de la demande" />
+											</div>
+											<div class="ui-g-12">
+												<h:outputText rendered="#{!empty aceuilBean.congeSelected}"
+													value="Date de dépôt de la demande" />
+
+											</div>
+											<div class="ui-g-12 ui-md-6">
+												<p:commandButton value="Valider"
+													rendered="#{!empty aceuilBean.congeSelected}"
+													actionListener="#{aceuilBean.changestateConge}" />
+											</div>
+											<div class="ui-g-12 ui-md-6">
+												<p:commandButton value="Rejéter"
+													rendered="#{!empty aceuilBean.congeSelected}"
+													actionListener="#{aceuilBean.changestateConge2}" />
+											</div>
+										</div>
+									</h:panelGroup>
+								</div>
+							</p:panel>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

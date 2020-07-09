@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pu="http://primefaces.org/ultima">
+
+	<h:form id="menuform">
+		<div class="layout-menu layout-menu-dark">
+			<div class="nano">
+				<div class="nano-content menu-scroll-content">
+					<ui:fragment>
+						<div class="profile">
+							<div class="profile-image"></div>
+							<a id="profile-options" href="#"> <span class="profile-name">#{sessionScope.sessionUser.nom}
+									#{sessionScope.sessionUser.prenom}</span> <i class="material-icons">&#xE313;</i>
+							</a>
+						</div>
+
+						<ul id="profile-menu" class="ultima-menu">
+							<li role="menuitem"><a
+								href="#{request.contextPath}/demandeconge.xhtml"
+								class="ripplelink"> <i class="material-icons">&#xE7FD;</i> <span>Mon
+										Profil</span>
+							</a></li>
+							<li role="menuitem"><a onclick="PF('logoutdia').show()"
+								href="#" class="ripplelink"> <i class="material-icons">&#xE8AC;</i>
+									<span>Logout</span>
+							</a></li>
+						</ul>
+					</ui:fragment>
+
+					<pu:menu widgetVar="me">
+						<p:menuitem id="um_dashboard" value="Tableau de bord"
+							icon="&#xE871;" outcome="/dashboard" />
+						<p:menuitem id="um_account" value="Mon compte" icon="&#xE871;"
+							outcome="/dashboard" />
+						<p:menuitem id="um_zccounts" value="Gestion des comptes"
+							icon="&#xE871;" outcome="/gestioncompte" />
+						<p:menuitem id="um_type_cong" value="Type de congé"
+							icon="&#xE871;" outcome="/typeconge" />
+						<p:menuitem id="um_poste" value="Gestion de poste" icon="&#xE871;"
+							outcome="/poste" />
+						<p:menuitem id="um_conge" value="Demande de congé" icon="&#xE871;"
+							outcome="/demandeconge" />
+					</pu:menu>
+				</div>
+			</div>
+		</div>
+	</h:form>
+	<p:dialog widgetVar="logoutdia" modal="true" resizable="false">
+		<h:form id="logoutdia">
+			<h2>Voulez-vous vous déconnecter</h2>
+			<div class="ui-g">
+				<div class="ui-g-6">
+					<p:commandButton action="#{appManagerBean.logout()}" value="Oui"
+						style="width:100%" />
+				</div>
+				<div class="ui-g-6">
+					<p:commandButton onclick="PF('logoutdia').hide()" value="Annuler"
+						style="width:100%" />
+				</div>
+			</div>
+		</h:form>
+	</p:dialog>
+</ui:composition>

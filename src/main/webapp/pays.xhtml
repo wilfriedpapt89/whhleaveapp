@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="form">
+			<p:growl id="message" showDetail="true" showSummary="true" />
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card card-w-title">
+						<h1>Paramètre pays</h1>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-lg-3" />
+							<div class="ui-g-12 ui-lg-6">
+								<p:panelGrid columns="2" layout="grid"
+									styleClass="ui-panelgrid-blank form-group">
+									<h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+										<p:inputText id="nom" value="#{paysBean.pays.nom}"
+											required="true"
+											requiredMessage="Trois caractères au minimum sont requis">
+											<f:validateLength minimum="3" maximum="100" />
+											<p:clientValidator event="blur" />
+										</p:inputText>
+										<p:message for="nom" display="text" />
+										<label>Nom du pays</label>
+									</h:panelGroup>
+									<h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+										<p:inputText id="code" required="true"
+											requiredMessage="Veuillez préciser le code téléphonique/"
+											value="#{paysBean.pays.codeTelefone}">
+											<f:validateLength minimum="3" maximum="10" />
+											<p:clientValidator event="blur" />
+										</p:inputText>
+										<p:message for="code" display="text" />
+										<label>Code téléphonique</label>
+									</h:panelGroup>
+									<h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+										<p:inputText required="true"
+											requiredMessage="Veuillez préciser la monnaie svp"
+											id="monnaie" value="#{paysBean.pays.devise}">
+											<f:validateLength minimum="3" maximum="100" />
+											<p:clientValidator event="blur" />
+										</p:inputText>
+										<p:message for="monnaie" display="text" />
+										<label>Monnaie</label>
+									</h:panelGroup>
+									<h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+										<p:inputText required="true" id="devise"
+											requiredMessage="Veuillez préciser la devise svp"
+											value="#{paysBean.pays.symbole}">
+											<f:validateLength minimum="3" maximum="10" />
+											<p:clientValidator event="blur" />
+										</p:inputText>
+										<label>Devise(Symbole)</label>
+										<p:message for="devise" display="text" />
+									</h:panelGroup>
+								</p:panelGrid>
+							</div>
+							<div class="ui-g-12 ui-lg-3" />
+							<div class="ui-g-12 ui-lg-3" />
+							<div class="ui-g-12 ui-lg-6">
+								<p:commandButton value="Enregistrer" ajax="false"
+									validateClient="true" style="width:100%"
+									action="#{paysBean.save()}" />
+							</div>
+							<div class="ui-g-12 ui-lg-3" />
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

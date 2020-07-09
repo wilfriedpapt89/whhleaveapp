@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>CREER MA CAISSE</title>
+
+	<h:outputScript name="js/layout-animations.js" library="ultima-layout" />
+	<script type="text/javascript">
+        //<![CDATA[
+            var Wizard = {
+                init: function() {
+                    this.wizardContent = $('.wizard-content');
+                    if (this.wizardContent.length) {
+                        this.wizardCard = this.wizardContent.find('.wizard-card');
+                        this.tabs = this.wizardCard.find('> .wizard-card-header .tab');
+                        this.tabBar = this.wizardCard.find('> .wizard-card-header .tab-bar');
+
+                        var continueButton = $('.continue-button'),
+                            $this = this;
+
+                        this.tabBar.css('width', (100 / this.tabs.length) + '%');
+
+                        this.tabs.off('click.wizard-tab').on('click.wizard-tab', function() {
+                            $this.openNextTab($(this));
+                        });
+                    
+                        continueButton.off('click.cbutton').on('click.cbutton', function() {
+                            var content = $(this).closest('.wizard-card-content'),
+                                index = content.index(),
+                                nextTab = $this.tabs.eq(index);
+                                
+                            content.find('.ink').remove();
+                            $this.openNextTab(nextTab);
+                        });
+                    }
+                },
+
+                openNextTab: function(tab) {
+                    var index = tab.index();
+
+                    if (!tab.hasClass('selected-tab')) {
+                        tab.siblings('.tab').removeClass('selected-tab').end().addClass('selected-tab');
+                        this.wizardCard.children('.wizard-card-content').filter('.active-content').removeClass('active-content').end().eq(index).addClass('active-content');
+                        this.tabBar.css('left', (index * (100 / this.tabs.length)) + '%');
+                    }
+                },
+
+                selectOrderInfo: function(buttonSelector, orderSelector) {
+                    var button = $(buttonSelector),
+                        selectedOrder = $(orderSelector),
+                        content = button.closest('.wizard-card-content'),
+                        index = content.index(),
+                        nextTab = this.tabs.eq(index);
+
+                    content.find('.ink').remove();
+                    selectedOrder.siblings().removeClass('selected-order').end().addClass('selected-order');
+                    this.openNextTab(nextTab);
+                }
+            }
+
+
+            $(function() {
+                Wizard.init();
+            });            
+        //]]>
+        </script>
+</h:head>
+
+<h:body styleClass="wizard-body">
+	<h:form id="form">
+		<p:growl id="message" showDetail="true" showSummary="true" />
+		<div class="wizard-wrapper">
+			<div class="wizard-topbar">
+				<div class="logo"></div>
+				<div class="profile">
+					<div class="profile-text">
+						<h1>CREER MA CAISSE</h1>
+						<p>Compléter les informations suivantes</p>
+					</div>
+					<p:graphicImage styleClass="profile-image"
+						name="images/extensions/flag-us@2x.png" library="ultima-layout" />
+				</div>
+			</div>
+			<div class="wizard-content">
+				<div class="wizard-card">
+					<div class="wizard-card-header">
+						<div class="ui-g">
+							<div class="ui-g-6 tab selected-tab register-tab">
+								<div class="icon">
+									<i class="material-icons"> fingerprint </i>
+								</div>
+								<div class="title">Générales</div>
+							</div>
+							<div class="ui-g-6 tab tier-tab">
+								<div class="icon">
+									<i class="material-icons"> layers </i>
+								</div>
+								<div class="title">Emprunts</div>
+							</div>
+							<div class="tab-bar"></div>
+						</div>
+					</div>
+					<div class="wizard-card-content active-content register ">
+						<div class="ui-g ">
+							<div class="ui-g-12  ui-lg-6">
+								<div class="forms">
+									<div class="ui-inputgroup">
+										<span class="ui-inputgroup-addon"> <i
+											class="material-icons">account_circle</i>
+										</span>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputText id="nomcaisse" required="true"
+												requiredMessage="Quatre caractères sont requis au minimum"
+												value="#{caisseBean.caisse.designation}">
+												<f:validateLength minimum="3" />
+												<p:clientValidator event="blur" />
+											</p:inputText>
+											<label>NOM DE LA CAISSE</label>
+											<br />
+										</h:panelGroup>
+									</div>
+									<p:message for="nomcaisse" display="text" />
+									<div class="ui-inputgroup">
+										<span class="ui-inputgroup-addon"> <i
+											class="material-icons">card_travel</i>
+										</span>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputText decimalPlaces="0" thousandSeparator="&#160;"
+												value="#{caisseBean.caisse.capital}" />
+											<label>CAPITAL DE DEPART</label>
+										</h:panelGroup>
+										<span class="ui-inputgroup-addon">FBU</span>
+									</div>
+									<p:selectOneMenu id="typecaisse"
+										value="#{caisseBean.parametreCaisse.typeCaisse}"
+										style="margin-bottom:10px;">
+										<f:selectItem itemLabel="TYPE DE CAISSE" itemValue="" />
+										<f:selectItem itemLabel="Actionnariat" itemValue="1" />
+										<f:selectItem itemLabel="Emprunt circulaire" itemValue="2" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="ui-g-12 ui-lg-6">
+								<div class="forms">
+									<p:selectOneMenu id="payscaisse" style="margin-bottom:10px;">
+										<f:selectItem itemLabel="VOTRE PAYS" itemValue="" />
+										<f:selectItem itemLabel="Burundi" itemValue="1" />
+										<f:selectItem itemLabel="Rwanda" itemValue="2" />
+									</p:selectOneMenu>
+									<div class="ui-inputgroup">
+										<h:panelGroup styleClass="md-inputfield">
+											<p:spinner value="#{caisseBean.parametreCaisse.minimumMbre}"
+												style="width:100%" />
+											<label>NBRE MINIMUM DE MEMBRES</label>
+										</h:panelGroup>
+									</div>
+									<div class="ui-inputgroup">
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputText
+												value="#{caisseBean.parametreCaisse.numeroContact}" />
+											<label>NUMERO DE CONTACT</label>
+										</h:panelGroup>
+									</div>
+								</div>
+							</div>
+							<div class="ui-g-12">
+								<p:commandButton type="button" value="CONTINUE"
+									styleClass="continue-button" />
+							</div>
+						</div>
+					</div>
+					<div class="wizard-card-content register">
+						<div class="ui-g ">
+							<h:panelGroup layout="block" styleClass="ui-g-12 ui-lg-6">
+								<div class="forms">
+									<div class="ui-inputgroup">
+										<span class="ui-inputgroup-addon"> <i
+											class="material-icons">card_travel</i>
+										</span>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputText value="#{caisseBean.parametreCaisse.action}" />
+											<label>MONTANT DE L'ACTION</label>
+										</h:panelGroup>
+									</div>
+									<p:panelGrid columns="1" style="margin-top: 15px" layout="grid"
+										styleClass="form-group ui-panelgrid-blank">
+										<p:inputText id="tauxEnvGlobal" style="margin-bottom:10px;"
+											value="#{caisseBean.parametreCaisse.partSurEnveloppeGlobal}"
+											placeholder="Part sur l'enveloppe globale" />
+										<p:slider for="tauxEnvGlobal" />
+									</p:panelGrid>
+
+								</div>
+							</h:panelGroup>
+							<h:panelGroup layout="block" styleClass="ui-g-12 ui-lg-6">
+								<div class="forms">
+									<div class="ui-inputgroup">
+										<span class="ui-inputgroup-addon"> <i
+											class="material-icons">card_travel</i>
+										</span>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputText
+												value="#{caisseBean.parametreCaisse.tauxInteret}" />
+											<label>INTERET SUR L'EMPRUNT</label>
+										</h:panelGroup>
+									</div>
+									<p:panelGrid columns="1" style="margin-top: 15px" layout="grid"
+										styleClass="form-group ui-panelgrid-blank">
+										<p:inputText id="tauxEnv" style="margin-bottom:10px;"
+											value="#{caisseBean.parametreCaisse.partSurEnveloppeCommun}"
+											placeholder="Part sur mon enveloppe" />
+										<p:slider for="tauxEnv" />
+									</p:panelGrid>
+								</div>
+							</h:panelGroup>
+							<h:panelGroup layout="block" rendered="false"
+								styleClass="ui-g-12 ui-lg-6">
+								<div class="forms">
+									<p:selectOneMenu
+										value="#{caisseBean.parametreCaisse.cycleOctroi}"
+										style="margin-bottom:10px;">
+										<f:selectItem itemLabel="Cycle d'octroi" itemValue="" />
+										<f:selectItem itemLabel="Par jour" itemValue="1" />
+										<f:selectItem itemLabel="Par semaine" itemValue="2" />
+										<f:selectItem itemLabel="Par mois" itemValue="3" />
+										<f:selectItem itemLabel="Par trimestre" itemValue="4" />
+										<f:selectItem itemLabel="Par semestre" itemValue="5" />
+									</p:selectOneMenu>
+									<div class="ui-inputgroup">
+										<span class="ui-inputgroup-addon"> <i
+											class="material-icons">card_travel</i>
+										</span>
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputText value="#{caisseBean.parametreCaisse.octroi}" />
+											<label>Montant de l'octroi</label>
+										</h:panelGroup>
+									</div>
+								</div>
+							</h:panelGroup>
+							<div class="ui-g-12">
+								<p:commandButton value="ENREGISTRER" validateClient="true"
+									action="#{caisseBean.save()}" styleClass="continue-button" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</h:form>
+	<h:outputStylesheet name="css/animate.css" library="ultima-layout" />
+	<h:outputStylesheet name="css/layout-dark-blue.css"
+		library="ultima-layout" />
+	<h:outputStylesheet name="css/grid.css" library="ultima-layout" />
+	<h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+</h:body>
+
+</html>

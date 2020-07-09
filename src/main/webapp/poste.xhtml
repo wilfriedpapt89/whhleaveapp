@@ -1,0 +1,83 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="form1">
+			<p:growl id="msg" showSummary=" true" showDetail="true" />
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card card-w-title">
+						<h1>Gestion de postes</h1>
+						<p:panelGrid columns="2" layout="grid"
+							styleClass="ui-panelgrid-blank form-group">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText value="#{posteBean.poste.reference}"
+									style="width:100%" readonly="true"></p:inputText>
+								<label>Réference du poste</label>
+							</h:panelGroup>
+
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText value="#{posteBean.poste.designation}"
+									style="width:100%" readonly="false"></p:inputText>
+								<label>Nom du poste</label>
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield" />
+							<p:panelGrid columns="2" layout="grid"
+								styleClass="ui-panelgrid-blank form-group">
+								<h:panelGroup styleClass="md-inputfield">
+									<p:commandButton value="Réinitialiser" style="width:100%"
+										action="#{posteBean.save()}" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="md-inputfield">
+									<p:commandButton value="Enregistrer" style="width:100%"
+										action="#{posteBean.save()}" />
+								</h:panelGroup>
+							</p:panelGrid>
+						</p:panelGrid>
+					</div>
+				</div>
+				<div class="ui-g-12">
+					<div class="card card-w-title">
+						<h1>Tous les postes</h1>
+						<div class="ui-g ui-fluid">
+							<div class="ui-g-12">
+								<p:dataTable var="pos" value="#{posteBean.postes}"
+									selection="#{posteBean.posteSelected}"
+									paginatorPosition="bottom" paginatorAlwaysVisible="false"
+									paginator="true" rows="5" selectionMode="single"
+									rowKey="#{pos.id}" emptyMessage="Pas de poste enregstrée">
+									<f:facet name="header">Liste des postes déjà enregistrées</f:facet>
+									<p:column headerText="Réference">
+										<h:outputText value="#{pos.reference}" />
+									</p:column>
+									<p:column headerText="Nom du poste">
+										<h:outputText value="#{pos.designation}" />
+									</p:column>
+									<p:column headerText="Modifier">
+										<p:commandButton icon="ui-icon-edit"
+											action="#{posteBean.getSelectItem()}">
+											<f:setPropertyActionListener value="#{pos}"
+												target="#{posteBean.posteSelected}" />
+										</p:commandButton>
+									</p:column>
+									<p:column headerText="Supprimer">
+										<p:commandButton icon="ui-icon-clear"
+											action="#{posteBean.delete()}"
+											onclick="if(!confirm('Voulez-vous supprimer')return false)">
+											<f:setPropertyActionListener value="#{pos}"
+												target="#{posteBean.posteSelected}" />
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
