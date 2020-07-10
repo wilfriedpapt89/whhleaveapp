@@ -32,9 +32,9 @@ public class HibernateUtil {
 
 			Properties settings = new Properties();
 			settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
-			settings.put(Environment.URL, "jdbc:mysql://localhost:3306/myholidz");
-			settings.put(Environment.USER, "root");
-			settings.put(Environment.PASS, "root");
+			settings.put(Environment.URL, "jdbc:mysql://b033fa04b8bf10:403b2de2@us-cdbr-east-02.cleardb.com/heroku_b17393d74fa243e?reconnect=true");
+			settings.put(Environment.USER, "b033fa04b8bf10");
+			settings.put(Environment.PASS, "403b2de2");
 			settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
 			settings.put(Environment.SHOW_SQL, "true");
 			// settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS,
