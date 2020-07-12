@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import entities.Poste;
@@ -17,6 +18,8 @@ import persistence.PosteDAO;
 @ViewScoped
 public class PosteBean {
 
+	@ManagedProperty(value = "#{appManagerBean}")
+	private AppManagerBean appManagerBean;
 	private Poste poste;
 	private Poste posteSelected;
 	private List<Poste> postes;
@@ -30,7 +33,7 @@ public class PosteBean {
 	public void init() {
 		poste = new Poste();
 		loadAll();
-		
+
 	}
 
 	public void save() {
@@ -68,7 +71,11 @@ public class PosteBean {
 
 	private void loadAll() {
 
-		postes = PosteDAO.loadAll();
+		if (appManagerBean.getAllPostes() != null && !appManagerBean.getAllPostes().isEmpty())
+			for (Poste p : appManagerBean.getAllPostes()) {
+				postes.add(0, p);
+			}
+
 		postes = postes.stream().filter(fil -> {
 			if (!fil.isDeleted()) {
 				return true;
@@ -76,8 +83,8 @@ public class PosteBean {
 				return false;
 			}
 		}).collect(Collectors.toList());
-		Collections.reverse(postes);
-		
+		// Collections.reverse(postes);
+
 		if (postes != null && !postes.isEmpty()) {
 			poste.setReference(Utilitaire.incrementReference(postes.get(0).getReference(), 3));
 		} else {
@@ -107,6 +114,14 @@ public class PosteBean {
 
 	public void setPostes(List<Poste> postes) {
 		this.postes = postes;
+	}
+
+	public AppManagerBean getAppManagerBean() {
+		return appManagerBean;
+	}
+
+	public void setAppManagerBean(AppManagerBean appManagerBean) {
+		this.appManagerBean = appManagerBean;
 	}
 
 }

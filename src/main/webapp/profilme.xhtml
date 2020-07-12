@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="form1">
+			<p:growl id="msg" showDetail="true" showSummary="true" />
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card shadow-box ui-shadow-2">
+						<h1>Mon profil</h1>
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-2">
+								<h2
+									style="display: inline-block; margin: auto; text-align: center">Nom</h2>
+							</div>
+							<h:panelGroup id="username" layout="block"
+								styleClass="ui-g-12 ui-md-6">
+								<p:inputText value="#{profilMeBean.operateur.nom}"
+									disabled="#{profilMeBean.userNameCheck}" style="width:100%"></p:inputText>
+							</h:panelGroup>
+							<div class="ui-g-12 ui-md-4">
+								<p:commandButton action="#{profilMeBean.changeFlag()}"
+									icon="ui-icon-edit" update="username" partialSubmit="true"
+									process="@this" />
+							</div>
+							<div class="ui-g-12 ui-md-2">
+								<h2
+									style="display: inline-block; margin: auto; text-align: center">Prénom</h2>
+							</div>
+							<h:panelGroup id="userlastname" layout="block"
+								styleClass="ui-g-12 ui-md-6">
+								<p:inputText value="#{profilMeBean.operateur.prenom}"
+									disabled="#{profilMeBean.userLastNameCheck}" style="width:100%"></p:inputText>
+							</h:panelGroup>
+							<div class="ui-g-12 ui-md-4">
+								<p:commandButton action="#{profilMeBean.changeFlag2()}"
+									icon="ui-icon-edit" update="@form" partialSubmit="true"
+									process="userlastname" />
+							</div>
+
+							<div class="ui-g-12 ui-md-2">
+								<h2
+									style="display: inline-block; margin: auto; text-align: center">Email</h2>
+							</div>
+							<h:panelGroup id="userEmail" layout="block"
+								styleClass="ui-g-12 ui-md-6">
+								<p:inputText value="#{profilMeBean.operateur.email}"
+									disabled="#{profilMeBean.userEmailCheck}" style="width:100%"></p:inputText>
+							</h:panelGroup>
+							<div class="ui-g-12 ui-md-4">
+								<p:commandButton action="#{profilMeBean.changeFlag3()}"
+									icon="ui-icon-edit" update="@form" partialSubmit="true"
+									process="@form" />
+							</div>
+							<div class="ui-g-12 ui-md-2">
+								<h2
+									style="display: inline-block; margin: auto; text-align: center">Téléphone</h2>
+							</div>
+							<h:panelGroup id="userTelefon" layout="block"
+								styleClass="ui-g-12 ui-md-6">
+								<p:inputText value="#{profilMeBean.operateur.telefon}"
+									disabled="#{!profilMeBean.userTelefonCheck}" style="width:100%"></p:inputText>
+							</h:panelGroup>
+							<div class="ui-g-12 ui-md-4">
+								<p:commandButton action="#{profilMeBean.changeFlag4()}"
+									icon="ui-icon-edit" update="userTelefon" partialSubmit="true"
+									process="@this" />
+							</div>
+							<div class="ui-g-12 ui-md-2">
+								<h2
+									style="display: inline-block; margin: auto; text-align: center">Mot
+									de passe</h2>
+							</div>
+							<h:panelGroup id="userpassword" layout="block"
+								styleClass="ui-g-12 ui-md-6">
+								<p:inputText value="#{profilMeBean.operateur.password}"
+									disabled="#{!profilMeBean.userPasswordCheck}"
+									style="width:100%"></p:inputText>
+							</h:panelGroup>
+							<div class="ui-g-12 ui-md-4">
+								<p:commandButton icon="ui-icon-edit"
+									action="#{profilMeBean.changeFlag5()}" update="userpassword"
+									partialSubmit="true" process="@this" />
+							</div>
+
+							<div class="ui-g-12 ui-md-4" />
+							<div class="ui-g-12 ui-md-4">
+								<p:commandButton value="Enregistrer"
+									action="#{profilMeBean.save()}" />
+							</div>
+							<div class="ui-g-12 ui-md-4" />
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

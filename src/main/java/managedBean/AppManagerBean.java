@@ -11,8 +11,11 @@ import javax.faces.context.FacesContext;
 
 import entities.Conge;
 import entities.OperateurC;
+import entities.Poste;
 import entities.Utilitaire;
 import persistence.CongeDAO;
+import persistence.EmployeeDAO;
+import persistence.PosteDAO;
 
 @ManagedBean(eager = true)
 @ApplicationScoped
@@ -25,10 +28,25 @@ public class AppManagerBean {
 	// Pour notifier les interims
 	private Map<Long, Boolean> notifications;
 	private CopyOnWriteArrayList<Conge> allConges;
+	private CopyOnWriteArrayList<Poste> allPostes;
+	private CopyOnWriteArrayList<OperateurC> allEmployee;
 
 	@PostConstruct
 	public void init() {
 		sortConnges();
+		loadAllPoste();
+		loadAllEmployee();
+	}
+
+	private void loadAllEmployee() {
+		// TODO Auto-generated method stub
+
+		allEmployee = EmployeeDAO.loadAllValidateEmployee2();
+	}
+
+	private void loadAllPoste() {
+		// TODO Auto-generated method stub
+		allPostes = PosteDAO.loadAll2();
 	}
 
 	public void addDemandeConge(Conge conge) {
@@ -103,6 +121,16 @@ public class AppManagerBean {
 
 	}
 
+	public void addPosteSaved(Long posteId) {
+
+		Poste poste = PosteDAO.getOnlyOne(posteId);
+		allPostes.add(0, poste);
+	}
+
+	public void loadAllEmploye(Long posteId) {
+
+	}
+
 	public CopyOnWriteArrayList<Conge> getDemandeConges() {
 		return demandeConges;
 	}
@@ -141,6 +169,22 @@ public class AppManagerBean {
 
 	public void setCongesRejettes(CopyOnWriteArrayList<Conge> congesRejettes) {
 		this.congesRejettes = congesRejettes;
+	}
+
+	public CopyOnWriteArrayList<Poste> getAllPostes() {
+		return allPostes;
+	}
+
+	public void setAllPostes(CopyOnWriteArrayList<Poste> allPostes) {
+		this.allPostes = allPostes;
+	}
+
+	public CopyOnWriteArrayList<OperateurC> getAllEmployee() {
+		return allEmployee;
+	}
+
+	public void setAllEmployee(CopyOnWriteArrayList<OperateurC> allEmployee) {
+		this.allEmployee = allEmployee;
 	}
 
 }

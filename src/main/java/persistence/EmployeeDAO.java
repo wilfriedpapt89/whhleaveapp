@@ -1,6 +1,7 @@
 package persistence;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -45,6 +46,22 @@ public class EmployeeDAO {
 		Session session = HibernateUtil.getSession();
 		employees = HibernateUtil.loadAllData(OperateurC.class, session);
 		return employees;
+	}
+
+	public static CopyOnWriteArrayList<OperateurC> loadAllValidateEmployee2() {
+		List<OperateurC> employees = null;
+		CopyOnWriteArrayList<OperateurC> employeesResult = null;
+		Session session = HibernateUtil.getSession();
+		employees = HibernateUtil.loadAllData(OperateurC.class, session);
+
+		if (employees != null && !employees.isEmpty()) {
+			employeesResult = new CopyOnWriteArrayList<>();
+			for (OperateurC op : employees) {
+				if (op.isActif() && !op.isSuspendu())
+					employeesResult.add(0, op);
+			}
+		}
+		return employeesResult;
 	}
 
 	public static OperateurC loginEmploye(String login, String password) {

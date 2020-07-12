@@ -1,6 +1,7 @@
 package persistence;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import org.hibernate.Session;
@@ -35,4 +36,34 @@ public class PosteDAO {
 		postes = postes.stream().filter(fil -> !fil.isDeleted()).collect(Collectors.toList());
 		return postes;
 	}
+
+	public static CopyOnWriteArrayList<Poste> loadAll2() {
+		List<Poste> postes = null;
+		CopyOnWriteArrayList<Poste> postesResult = null;
+		Session session = HibernateUtil.getSession();
+		postes = HibernateUtil.loadAllData(Poste.class, session);
+		postes = postes.stream().filter(fil -> !fil.isDeleted()).collect(Collectors.toList());
+		if (postes != null && !postes.isEmpty()) {
+			postesResult = new CopyOnWriteArrayList<>();
+			for (Poste p : postes) {
+				postesResult.add(0, p);
+			}
+		}
+
+		return postesResult;
+	}
+
+	public static Poste getOnlyOne(Long posteId) {
+		// TODO Auto-generated method stub
+		Poste poste = null;
+		Session session = HibernateUtil.getSession();
+		try {
+			poste = session.load(Poste.class, posteId);
+		} catch (Exception e) {
+			// TODO: handle exception
+			poste = null;
+		}
+		return poste;
+	}
+
 }

@@ -18,6 +18,7 @@ public class OperateurC {
 	private String prenom;
 	private boolean actif;
 	private boolean suspendu;
+	private boolean admin;
 	@OneToOne
 	private Poste poste;
 	private String email;
@@ -113,6 +114,14 @@ public class OperateurC {
 
 	public void setSuspendu(boolean suspendu) {
 		this.suspendu = suspendu;
+	}
+	
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 
 	@Override
