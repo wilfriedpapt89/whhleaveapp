@@ -19,6 +19,7 @@ public class OperateurC {
 	private boolean actif;
 	private boolean suspendu;
 	private boolean admin;
+	private boolean notifie;
 	@OneToOne
 	private Poste poste;
 	private String email;
@@ -34,6 +35,14 @@ public class OperateurC {
 
 	public void setReferant(OperateurC referant) {
 		this.referant = referant;
+	}
+
+	public boolean isNotifie() {
+		return notifie;
+	}
+
+	public void setNotifie(boolean notifie) {
+		this.notifie = notifie;
 	}
 
 	public Long getId() {
@@ -115,7 +124,7 @@ public class OperateurC {
 	public void setSuspendu(boolean suspendu) {
 		this.suspendu = suspendu;
 	}
-	
+
 	public boolean isAdmin() {
 		return admin;
 	}

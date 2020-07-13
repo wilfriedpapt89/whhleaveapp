@@ -12,13 +12,15 @@
 					<ui:fragment>
 						<div class="profile">
 							<div class="profile-image"></div>
-							<a id="profile-options" href="#"> <span class="profile-name">#{sessionScope.sessionUser.nom}
-									#{sessionScope.sessionUser.prenom}</span> <i class="material-icons">&#xE313;</i>
+							<a id="profile-options" href="#"> <span class="profile-name">#{!empty
+									sessionScope.sessionUser ? sessionScope.sessionUser.nom : ''}
+									#{!empty sessionScope.sessionUser ?
+									sessionScope.sessionUser.prenom : 'Option'}</span> <i
+								class="material-icons">&#xE313;</i>
 							</a>
 						</div>
-
 						<ul id="profile-menu" class="ultima-menu">
-							<li role="menuitem"><a
+							<li role="menuitem"><a style="#{empty sessionScope.sessionUser ? 'display:none' : ''}"
 								href="#{request.contextPath}/demandeconge.xhtml"
 								class="ripplelink"> <i class="material-icons">&#xE7FD;</i> <span>Mon
 										Profil</span>
@@ -31,18 +33,25 @@
 					</ui:fragment>
 
 					<pu:menu widgetVar="me">
-						<p:menuitem id="um_dashboard" value="Tableau de bord"
-							icon="&#xE871;" outcome="/dashboard" />
-						<p:menuitem id="um_account" value="Mon compte" icon="&#xE871;"
-							outcome="/profilme" />
-						<p:menuitem id="um_zccounts" value="Gestion des comptes"
-							icon="&#xE871;" outcome="/gestioncompte" />
+						<p:menuitem id="um_dashboard"
+							rendered="#{!empty sessionScope.sessionUser}"
+							value="Tableau de bord" icon="&#xE871;" outcome="/dashboard" />
+						<p:menuitem id="um_account"
+							rendered="#{!empty sessionScope.sessionUser}" value="Mon compte"
+							icon="&#xE871;" outcome="/profilme" />
+						<p:menuitem id="um_zccounts"
+							rendered="#{!empty sessionScope.sessionUser}"
+							value="Gestion des comptes" icon="&#xE871;"
+							outcome="/gestioncompte" />
 						<p:menuitem id="um_type_cong" value="Type de congé"
+							rendered="#{!empty sessionScope.sessionUser and sessionScope.sessionUser.admin eq true}"
 							icon="&#xE871;" outcome="/typeconge" />
-						<p:menuitem id="um_poste" value="Gestion de poste" icon="&#xE871;"
-							outcome="/poste" />
-						<p:menuitem id="um_conge" value="Demande de congé" icon="&#xE871;"
-							outcome="/demandeconge" />
+						<p:menuitem id="um_poste"
+							rendered="#{!empty sessionScope.sessionUser and sessionScope.sessionUser.admin eq true}"
+							value="Gestion de poste" icon="&#xE871;" outcome="/poste" />
+						<p:menuitem id="um_conge"
+							rendered="#{!empty sessionScope.sessionUser}"
+							value="Demande de congé" icon="&#xE871;" outcome="/demandeconge" />
 					</pu:menu>
 				</div>
 			</div>

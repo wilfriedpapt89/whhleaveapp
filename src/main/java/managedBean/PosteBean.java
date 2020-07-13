@@ -1,5 +1,6 @@
 package managedBean;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -71,6 +72,7 @@ public class PosteBean {
 
 	private void loadAll() {
 
+		postes = new ArrayList<>();
 		if (appManagerBean.getAllPostes() != null && !appManagerBean.getAllPostes().isEmpty())
 			for (Poste p : appManagerBean.getAllPostes()) {
 				postes.add(0, p);

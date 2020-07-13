@@ -1,8 +1,13 @@
 package managedBean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpSession;
 
 import entities.OperateurC;
@@ -13,23 +18,51 @@ import persistence.EmployeeDAO;
 @ViewScoped
 public class ProfilMeBean {
 
+	@ManagedProperty(value = "#{appManagerBean}")
+	private AppManagerBean appManagerBean;
 	private HttpSession maSession;
 	private OperateurC operateur;
+	private List<SelectItem> operateursItems;
 	private boolean userNameCheck;
 	private boolean userLastNameCheck;
 	private boolean userTelefonCheck;
 	private boolean userPasswordCheck;
 	private boolean userConfirmPasswordCheck;
 	private boolean userEmailCheck;
+	private boolean userReferantCheck;
+	private String confirme;
+	private long referant;
 
 	@PostConstruct
 	public void init() {
 
 		maSession = Utilitaire.getSession();
 		operateur = (OperateurC) maSession.getAttribute("sessionUser");
-		userNameCheck = true;
-		userLastNameCheck = true;
-		userEmailCheck = true;
+		if (operateur.getReferant() != null)
+			referant = operateur.getReferant().getId();
+		attribuateStatus(true);
+		buildOperateurItems();
+	}
+
+	private void attribuateStatus(boolean status) {
+
+		userNameCheck = status;
+		userLastNameCheck = status;
+		userEmailCheck = status;
+		userTelefonCheck = status;
+		userPasswordCheck = status;
+		userConfirmPasswordCheck = status;
+	}
+
+	private void buildOperateurItems() {
+
+		for (OperateurC op : appManagerBean.getAllEmployee()) {
+			if (op.getId() != operateur.getId())
+				operateursItems.add(new SelectItem(op.getId(), op.getNom() + " - " + op.getPrenom()));
+			else {
+				operateursItems.add(new SelectItem(op.getId(), "Moi-même"));
+			}
+		}
 
 	}
 
@@ -55,28 +88,66 @@ public class ProfilMeBean {
 			Utilitaire.afficherAttention("A votre attention", "Remplir le champ 'Motde passe");
 			Utilitaire.updateForm("form1:msg");
 			return;
+		} else if (!confirme.equals(operateur.getPassword())) {
+
+			Utilitaire.afficherAttention(" A votre attention", " Veuillez confirmer votre mot de passe");
+			Utilitaire.updateForm("form1:msg");
+			return;
 		}
 
 		boolean saved = EmployeeDAO.saveOrUpdate(operateur);
 		if (saved) {
 			maSession.setAttribute("sessionUser", operateur);
 			Utilitaire.afficherInformation("Informations modifiées");
+			if (operateur.getReferant() != null)
+				referant = operateur.getReferant().getId();
+			confirme = "";
+			attribuateStatus(true);
 			Utilitaire.updateForm("form1");
 		}
 	}
 
+	public boolean isUserReferantCheck() {
+		return userReferantCheck;
+	}
+
+	public void setUserReferantCheck(boolean userReferantCheck) {
+		this.userReferantCheck = userReferantCheck;
+	}
+
+	public AppManagerBean getAppManagerBean() {
+		return appManagerBean;
+	}
+
+	public void setAppManagerBean(AppManagerBean appManagerBean) {
+		this.appManagerBean = appManagerBean;
+	}
+
+	public List<SelectItem> getOperateursItems() {
+		return operateursItems;
+	}
+
+	public void setOperateursItems(List<SelectItem> operateursItems) {
+		this.operateursItems = operateursItems;
+	}
+
+	public long getReferant() {
+		return referant;
+	}
+
+	public void setReferant(long referant) {
+		this.referant = referant;
+	}
+
 	public void changeFlag() {
-		System.out.println("get that method" + userNameCheck);
 		userNameCheck = false;
 	}
 
 	public void changeFlag2() {
-		System.out.println("get that method 2 " + userLastNameCheck);
 		userLastNameCheck = false;
 	}
 
 	public void changeFlag3() {
-		System.out.println("get that method 3 " + userEmailCheck);
 		userEmailCheck = false;
 	}
 
@@ -91,6 +162,8 @@ public class ProfilMeBean {
 	}
 
 	public void changeFlag6() {
+
+		userReferantCheck = false;
 	}
 
 	public HttpSession getMaSession() {
@@ -155,6 +228,14 @@ public class ProfilMeBean {
 
 	public void setUserEmailCheck(boolean userEmailCheck) {
 		this.userEmailCheck = userEmailCheck;
+	}
+
+	public String getConfirme() {
+		return confirme;
+	}
+
+	public void setConfirme(String confirme) {
+		this.confirme = confirme;
 	}
 
 }
