@@ -2,6 +2,7 @@ package managedBean;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +27,8 @@ public class AppManagerBean {
 	private CopyOnWriteArrayList<Conge> congesValides;
 	private CopyOnWriteArrayList<Conge> congesRejettes;
 	// Pour notifier les interims
-	private Map<Long, Boolean> notifications;
+	private ConcurrentHashMap<Long, Integer> referantToNotify;
+	private ConcurrentHashMap<Long, Integer> operateurToNotify;
 	private CopyOnWriteArrayList<Conge> allConges;
 	private CopyOnWriteArrayList<Poste> allPostes;
 	private CopyOnWriteArrayList<OperateurC> allEmployee;
@@ -36,6 +38,8 @@ public class AppManagerBean {
 		sortConnges();
 		loadAllPoste();
 		loadAllEmployee();
+		operateurToNotify = new ConcurrentHashMap<>();
+		buidAccountToNotify();
 	}
 
 	private void loadAllEmployee() {
@@ -53,9 +57,13 @@ public class AppManagerBean {
 
 		demandeConges.add(conge);
 
-		if (notifications != null) {
+		if (referantToNotify != null) {
 			if (conge.getReferant() != null)
-				notifications.put(conge.getReferant().getId(), true);
+				if (!referantToNotify.contains(conge.getReferant().getId()))
+					referantToNotify.put(conge.getReferant().getId(), new Integer(1));
+				else
+					referantToNotify.put(conge.getReferant().getId(),
+							referantToNotify.get(conge.getReferant().getId()) + 1);
 		}
 	}
 
@@ -63,9 +71,13 @@ public class AppManagerBean {
 
 		demandeConges.remove(conge);
 
-		if (notifications != null) {
-			if (conge.getEmployee() != null)
-				notifications.put(conge.getEmployee().getId(), true);
+		if (referantToNotify != null) {
+			if (conge.getReferant() != null)
+				if (!referantToNotify.contains(conge.getReferant().getId()))
+					referantToNotify.put(conge.getReferant().getId(), new Integer(0));
+				else
+					referantToNotify.put(conge.getReferant().getId(),
+							referantToNotify.get(conge.getReferant().getId()) - 1);
 		}
 
 		if (conge.getDateValidation() != null) {
@@ -97,15 +109,41 @@ public class AppManagerBean {
 			allConges = new CopyOnWriteArrayList<>();
 	}
 
-	public boolean checkNotification(OperateurC operateurC) {
+	public int checkNotification(OperateurC operateurC) {
 
-		if (notifications != null && !notifications.isEmpty()) {
-			if (notifications.containsKey(operateurC.getId()))
-				return notifications.get(operateurC.getId());
+		if (referantToNotify != null && !referantToNotify.isEmpty()) {
+			if (referantToNotify.containsKey(operateurC.getId()))
+				return referantToNotify.get(operateurC.getId());
 			else
-				return false;
+				return 0;
 		} else
-			return false;
+			return 0;
+	}
+
+	public void buidAccountToNotify() {
+
+		if(allEmployee != null)
+		for (OperateurC op : allEmployee) {
+			if (op.isNotifie())
+				operateurToNotify.put(op.getId(), new Integer(0));
+		}
+	}
+
+	public void incrementToNotify(Conge demande) {
+
+		if (operateurToNotify != null && !operateurToNotify.isEmpty())
+			for (Map.Entry<Long, Integer> entr : operateurToNotify.entrySet()) {
+				entr.setValue(entr.getValue() + 1);
+			}
+	}
+
+	public void incrementToNotify(OperateurC operateurC) {
+
+		if (operateurToNotify != null && !operateurToNotify.isEmpty())
+			for (Map.Entry<Long, Integer> entr : operateurToNotify.entrySet()) {
+				if (operateurC.getId() == entr.getKey())
+					entr.setValue(0);
+			}
 	}
 
 	public void logout() {
@@ -147,12 +185,20 @@ public class AppManagerBean {
 		this.allConges = allConges;
 	}
 
-	public Map<Long, Boolean> getNotifications() {
-		return notifications;
+	public ConcurrentHashMap<Long, Integer> getReferantToNotify() {
+		return referantToNotify;
 	}
 
-	public void setNotifications(Map<Long, Boolean> notifications) {
-		this.notifications = notifications;
+	public void setReferantToNotify(ConcurrentHashMap<Long, Integer> referantToNotify) {
+		this.referantToNotify = referantToNotify;
+	}
+
+	public ConcurrentHashMap<Long, Integer> getOperateurToNotify() {
+		return operateurToNotify;
+	}
+
+	public void setOperateurToNotify(ConcurrentHashMap<Long, Integer> operateurToNotify) {
+		this.operateurToNotify = operateurToNotify;
 	}
 
 	public CopyOnWriteArrayList<Conge> getCongesValides() {

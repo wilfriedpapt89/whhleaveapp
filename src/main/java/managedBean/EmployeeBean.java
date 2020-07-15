@@ -61,22 +61,35 @@ public class EmployeeBean {
 
 	public void save() {
 
-		if (!checkPoste()) {
-			Utilitaire.afficherAttention("A votre attention", "Veuillez ajouter votre poste.");
-			Utilitaire.updateComponents(Arrays.asList("form1:msg"));
-			return;
+		if (employees != null && !employees.isEmpty()) {
+
+			if (!checkPoste()) {
+				Utilitaire.afficherAttention("A votre attention", "Veuillez ajouter votre poste.");
+				Utilitaire.updateComponents(Arrays.asList("form1:msg"));
+				return;
+			}
+
+			checkEmployee();
+			employee.setInscription(LocalDate.now());
+			employee.setActif(false);
+			employee.setSuspendu(false);
+			employee.setAdmin(false);
+			employee.setNotifie(false);
+		} else {
+			employee.setInscription(LocalDate.now());
+			employee.setActif(true);
+			employee.setSuspendu(false);
+			employee.setAdmin(true);
+			employee.setNotifie(true);
 		}
-		
-		checkEmployee();
-
-		employee.setInscription(LocalDate.now());
-		employee.setActif(false);
-		employee.setSuspendu(false);
-
 		boolean saved = EmployeeDAO.saveOrUpdate(employee);
 
 		if (saved) {
-			Utilitaire.afficherInformation("Compte créé. Contacter l'administrateur pour pouvoir l'activer");
+			if (!employee.isActif())
+				Utilitaire.afficherInformation("Compte créé. Contacter l'administrateur pour pouvoir l'activer");
+			else
+				Utilitaire.afficherInformation(
+						"Compte créé. Vous avez été paramtré comme administrateur de la plate-form");
 			referantSelected = 0;
 			posteSelected = 0;
 			employee = new OperateurC();

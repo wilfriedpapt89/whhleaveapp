@@ -43,12 +43,13 @@ public class LoginBean {
 			} else {
 
 				Utilitaire.afficherAttention("Erreur", "Identifiant ou mot de passe incorrect");
-				Utilitaire.updateComponents(Arrays.asList("msg"));
+				Utilitaire.updateForm("form1:msg");
 				return;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Utilitaire.afficherAttention("Erreur", "Identifiant ou mot de passe incorrect");
+			Utilitaire.updateForm("form1:msg");
 		}
 
 	}

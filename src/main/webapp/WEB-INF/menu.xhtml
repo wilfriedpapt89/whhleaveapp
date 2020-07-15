@@ -35,23 +35,23 @@
 					<pu:menu widgetVar="me">
 						<p:menuitem id="um_dashboard"
 							rendered="#{!empty sessionScope.sessionUser}"
-							value="Tableau de bord" icon="&#xE871;" outcome="/dashboard" />
+							value="Tableau de bord" icon="&#xE32C;" outcome="/dashboard" />
 						<p:menuitem id="um_account"
 							rendered="#{!empty sessionScope.sessionUser}" value="Mon compte"
-							icon="&#xE871;" outcome="/profilme" />
+							icon="&#xE7FD;" outcome="/profilme" />
 						<p:menuitem id="um_zccounts"
-							rendered="#{!empty sessionScope.sessionUser}"
-							value="Gestion des comptes" icon="&#xE871;"
+							rendered="#{!empty sessionScope.sessionUser and sessionScope.sessionUser.admin eq true}"
+							value="Gestion des comptes" icon="&#xE7EF;"
 							outcome="/gestioncompte" />
 						<p:menuitem id="um_type_cong" value="Type de congé"
 							rendered="#{!empty sessionScope.sessionUser and sessionScope.sessionUser.admin eq true}"
-							icon="&#xE871;" outcome="/typeconge" />
+							icon="&#xE905;" outcome="/typeconge" />
 						<p:menuitem id="um_poste"
 							rendered="#{!empty sessionScope.sessionUser and sessionScope.sessionUser.admin eq true}"
-							value="Gestion de poste" icon="&#xE871;" outcome="/poste" />
+							value="Gestion de poste" icon="&#xE84E;" outcome="/poste" />
 						<p:menuitem id="um_conge"
 							rendered="#{!empty sessionScope.sessionUser}"
-							value="Demande de congé" icon="&#xE871;" outcome="/demandeconge" />
+							value="Demande de congé" icon="&#xE904;" outcome="/demandeconge" />
 					</pu:menu>
 				</div>
 			</div>
@@ -63,11 +63,11 @@
 			<div class="ui-g">
 				<div class="ui-g-6">
 					<p:commandButton action="#{appManagerBean.logout()}" value="Oui"
-						style="width:100%" />
+						style="width:100%" icon="ui-icon-offline-pin" />
 				</div>
 				<div class="ui-g-6">
 					<p:commandButton onclick="PF('logoutdia').hide()" value="Annuler"
-						style="width:100%" />
+						icon="ui-check-cancel" style="width:100%" />
 				</div>
 			</div>
 		</h:form>

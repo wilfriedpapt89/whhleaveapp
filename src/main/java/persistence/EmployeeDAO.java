@@ -72,7 +72,14 @@ public class EmployeeDAO {
 		q.setParameter("password", password);
 		q.setParameter("actif", true);
 		q.setParameter("suspendu", false);
-		OperateurC employee = (OperateurC) q.getSingleResult();
+		OperateurC employee = null;
+		try {
+			employee = (OperateurC) q.getSingleResult();
+		} catch (Exception e) {
+			// TODO: handle exception
+			employee = null;
+		}
+
 		return employee;
 	}
 }

@@ -20,12 +20,17 @@
 
 <h:body styleClass="login-body">
 	<div class="card login-panel ui-fluid">
-		<h:form id="formlogin">
+		<h:form id="form1">
 			<p:growl id="msg" showDetail="true" showSummary="true" />
 			<div class="ui-g">
 				<div class="ui-g-12">
 					<p:graphicImage name="images/logo-ultima.svg"
 						library="ultima-layout" />
+				</div>
+				<div class="ui-g-12">
+					<p:autoUpdate>
+						<p:message />
+					</p:autoUpdate>
 				</div>
 				<div class="ui-g-12">
 					<h:panelGroup styleClass="md-inputfield">
@@ -40,7 +45,7 @@
 					</h:panelGroup>
 				</div>
 				<div class="ui-g-12">
-					<p:commandButton value="Se connecter"
+					<p:commandButton value="Se connecter" ajax="true"
 						action="#{loginBean.authentificateUser()}" icon="ui-icon-person" />
 					<p:button outcome="compte" value="Créer mon compte"
 						icon="ui-icon-help" styleClass="secondary" />
@@ -49,7 +54,7 @@
 		</h:form>
 	</div>
 
-	<div class="login-footer">Welt hunger hilfe - BURUNDI</div>
+	<h:panelGroup rendered="false" layout="block" styleClass="login-footer">Welt hunger hilfe - BURUNDI</h:panelGroup>
 
 	<h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
 	<h:outputStylesheet name="css/layout-dark-blue.css"

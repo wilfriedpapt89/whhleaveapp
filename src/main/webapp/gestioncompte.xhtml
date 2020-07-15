@@ -17,7 +17,8 @@
 									<div class="ui-g-12 ui-md-3" />
 									<div class="ui-g-12 ui-md-6">
 										<p:commandButton action="#{compteB.changeComptesStatus()}"
-											value="Activer le(s) compte(s) séléctionné(s)" />
+											value="Activer le(s) compte(s) séléctionné(s)"
+											icon="ui-icon-offline-pin" />
 									</div>
 									<div class="ui-g-12 ui-md-3" />
 									<div class="ui-g-12">
@@ -48,17 +49,25 @@
 												<h:outputText rendered="#{empty compte.referant}"
 													value="Pas de référant" />
 											</p:column>
-
 										</p:dataTable>
 
 									</div>
 								</div>
 							</p:tab>
 							<p:tab title="Tous les comptes ">
+								<div class="ui-g-12 ui-md-3" />
+								<div class="ui-g-12 ui-md-6">
+									<p:commandButton action="#{compteB.changeComptesStatus()}"
+										icon="ui-icon-add-alert"
+										value="Notifier les comptes séléctionés" />
+								</div>
+								<div class="ui-g-12 ui-md-3" />
 								<div class="ui-g-12">
 									<p:dataTable rows="10" paginatorAlwaysVisible="false"
-										paginatorPosition="bottom" rowKey="#{compte.id}" var="compte"
-										value="#{compteB.allComptes}">
+										rowKey="#{compte.id}" paginatorPosition="bottom"
+										selectionMode="multiple"
+										selection="#{compteB.allComptesSelecteds}" var="compte"
+										value="#{compteB.allComptesValides}">
 										<f:facet name="header">
 											Tous les comptes
 											</f:facet>
@@ -79,6 +88,10 @@
 												value="#{compte.referant.nom.concat(compte.referant.prenom)}" />
 											<h:outputText rendered="#{empty compte.referant}"
 												value="Pas de référant" />
+										</p:column>
+										<p:column headerText="Notifié">
+											<h:outputText rendered="#{compte.notifie}" value="Oui" />
+											<h:outputText rendered="#{!compte.notifie}" value="Non" />
 										</p:column>
 
 									</p:dataTable>

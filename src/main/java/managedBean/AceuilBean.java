@@ -114,8 +114,7 @@ public class AceuilBean {
 
 	public void checkNotification() {
 
-		System.out.println("je check les notifications");
-		if (appManagerBean.checkNotification(monCompte)) {
+		if (appManagerBean.checkNotification(monCompte) > 0) {
 			loadAllDemandeSent();
 			Utilitaire.updateComponents(Arrays.asList("form1:analysedemande", "form1:analysedemande"));
 		}
