@@ -37,6 +37,8 @@ public class Conge {
 	private String dateDebutString;
 	@Transient
 	private String dateFinString;
+	@Transient
+	private String statutLibelle;
 
 	public Conge() {
 		super();
@@ -166,14 +168,12 @@ public class Conge {
 	}
 
 	public String getDateDebutString() {
-
-		String result = Utilitaire.transformUtilDateInString(debut, 1);
+		String result = Utilitaire.transformUtilDateInString(debut, 2);
 		return result;
 	}
 
 	public String getDateFinString() {
-
-		String result = Utilitaire.transformUtilDateInString(fin, 1);
+		String result = Utilitaire.transformUtilDateInString(fin, 2);
 		return result;
 	}
 
@@ -207,6 +207,28 @@ public class Conge {
 
 	public void setMotifRejet(String motifRejet) {
 		this.motifRejet = motifRejet;
+	}
+
+	public String getStatutLibelle() {
+
+		switch (state) {
+		case 1:
+			statutLibelle = "Demande en cours ...";
+			break;
+		case 2:
+			statutLibelle = "Demande validée";
+			break;
+		case 3:
+			statutLibelle = "Demande rejetté";
+			break;
+		}
+
+		return statutLibelle;
+
+	}
+
+	public void setStatutLibelle(String statutLibelle) {
+		this.statutLibelle = statutLibelle;
 	}
 
 	@Override

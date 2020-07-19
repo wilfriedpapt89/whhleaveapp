@@ -54,8 +54,8 @@ public class EmployeeBean {
 		referantSelectItems.add(new SelectItem(0, "Choisir mon référant"));
 		if (employees != null && !employees.isEmpty())
 			for (OperateurC referant : employees)
-				referantSelectItems.add(new SelectItem(referant.getId(), referant.getPrenom() + "  " + referant.getNom()
-						+ " - " + referant.getPoste().getDesignation()));
+				referantSelectItems.add(new SelectItem(referant.getId(),
+						referant.getPrenom() + "  " + referant.getNom()));
 
 	}
 

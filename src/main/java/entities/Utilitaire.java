@@ -1,8 +1,12 @@
 package entities;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
+import java.util.logging.SimpleFormatter;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -58,14 +62,11 @@ public class Utilitaire {
 		recup += 1;
 		String ref = (recup) + "";
 		int diff = nbreCaractere - ref.length();
-		System.out.println("before hange " + ref);
 		if (ref.length() < nbreCaractere) {
 			for (int i = 0; i < diff; i++) {
 				ref = "0" + ref;
-				System.out.println("changing " + ref);
 			}
 		}
-		System.out.println("reference " + ref);
 		return ref;
 	}
 
@@ -104,8 +105,15 @@ public class Utilitaire {
 		return otp;
 	}
 
-	public static String transformUtilDateInString(Date debut, int i) {
+	public static String transformUtilDateInString(Date debut, int mode) {
 		// TODO Auto-generated method stub
-		return null;
+		DateFormat format1 = null;
+		if (mode == 1)
+			format1 = new SimpleDateFormat("dd/MM/yyyy");
+		else if (mode == 2)
+			format1 = new SimpleDateFormat("E. dd/MM/yyyy", Locale.FRANCE);
+		String result = format1.format(debut);
+
+		return result;
 	}
 }

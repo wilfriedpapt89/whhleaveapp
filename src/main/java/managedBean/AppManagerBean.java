@@ -40,6 +40,7 @@ public class AppManagerBean {
 		loadAllEmployee();
 		operateurToNotify = new ConcurrentHashMap<>();
 		buidAccountToNotify();
+		referantToNotify = new ConcurrentHashMap<>();
 	}
 
 	private void loadAllEmployee() {
@@ -81,10 +82,8 @@ public class AppManagerBean {
 		}
 
 		if (conge.getDateValidation() != null) {
-
 			congesValides.add(0, conge);
 		} else {
-
 			congesRejettes.add(0, conge);
 		}
 
@@ -107,6 +106,8 @@ public class AppManagerBean {
 			}
 		else
 			allConges = new CopyOnWriteArrayList<>();
+
+		System.out.println("congesValides " + congesValides.size());
 	}
 
 	public int checkNotification(OperateurC operateurC) {
@@ -122,11 +123,11 @@ public class AppManagerBean {
 
 	public void buidAccountToNotify() {
 
-		if(allEmployee != null)
-		for (OperateurC op : allEmployee) {
-			if (op.isNotifie())
-				operateurToNotify.put(op.getId(), new Integer(0));
-		}
+		if (allEmployee != null)
+			for (OperateurC op : allEmployee) {
+				if (op.isNotifie())
+					operateurToNotify.put(op.getId(), new Integer(0));
+			}
 	}
 
 	public void incrementToNotify(Conge demande) {
@@ -150,8 +151,8 @@ public class AppManagerBean {
 
 		Utilitaire.getSession().invalidate();
 		try {
-			FacesContext.getCurrentInstance().getExternalContext()
-					.redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath());
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/login.xhtml");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -159,9 +160,9 @@ public class AppManagerBean {
 
 	}
 
-	public void addPosteSaved(Long posteId) {
+	public void addPosteSaved(Poste poste) {
 
-		Poste poste = PosteDAO.getOnlyOne(posteId);
+		// Poste poste = PosteDAO.getOnlyOne(posteId);
 		allPostes.add(0, poste);
 	}
 

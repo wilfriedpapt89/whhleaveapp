@@ -55,13 +55,18 @@ public class ProfilMeBean {
 	}
 
 	private void buildOperateurItems() {
-
+		operateursItems = new ArrayList<>();
+		operateursItems.add(new SelectItem(0, "Choisir mon référant"));
 		for (OperateurC op : appManagerBean.getAllEmployee()) {
 			if (op.getId() != operateur.getId())
 				operateursItems.add(new SelectItem(op.getId(), op.getNom() + " - " + op.getPrenom()));
 			else {
 				operateursItems.add(new SelectItem(op.getId(), "Moi-même"));
 			}
+		}
+
+		if (operateur.getReferant() != null) {
+			referant = operateur.getReferant().getId();
 		}
 
 	}

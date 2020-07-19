@@ -39,15 +39,23 @@ public class PosteBean {
 
 	public void save() {
 
+		if (poste.getDesignation() != null && poste.getDesignation().trim().isEmpty()) {
+			Utilitaire.afficherAttention("A votre attention", "Le libellé du poste est vide");
+			Utilitaire.updateForm("form1:msg");
+			return;
+		}
 		boolean saved = PosteDAO.saveOrUpdateTache(poste);
+		Poste copy = new Poste(poste.getId(), poste.getReference(), poste.getDesignation());
+		appManagerBean.addPosteSaved(copy);
 		if (saved) {
 			Utilitaire.afficherInformation("Poste enregistré");
 			poste = new Poste();
 			loadAll();
+			Utilitaire.updateComponents(Arrays.asList("form1"));
 		} else {
 			Utilitaire.afficherAttention("Oups", "Echec de l'opération");
 		}
-		Utilitaire.updateComponents(Arrays.asList("form1"));
+
 	}
 
 	public void delete() {
@@ -75,7 +83,7 @@ public class PosteBean {
 		postes = new ArrayList<>();
 		if (appManagerBean.getAllPostes() != null && !appManagerBean.getAllPostes().isEmpty())
 			for (Poste p : appManagerBean.getAllPostes()) {
-				postes.add(0, p);
+				postes.add(p);
 			}
 
 		postes = postes.stream().filter(fil -> {

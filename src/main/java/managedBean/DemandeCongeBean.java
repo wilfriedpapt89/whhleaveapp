@@ -34,6 +34,7 @@ public class DemandeCongeBean {
 	private List<OperateurC> interimaires;
 	private int interimaireSelected;
 	private int typeCongeSelected;
+	private OperateurC operateurC;
 
 	public DemandeCongeBean() {
 		// TODO Auto-generated constructor stub
@@ -45,6 +46,7 @@ public class DemandeCongeBean {
 		conge = new Conge();
 		buildTypeConge();
 		buildInterimaire();
+		operateurC = (OperateurC) Utilitaire.getSession().getAttribute("sessionUser");
 
 	}
 
@@ -71,10 +73,17 @@ public class DemandeCongeBean {
 		for (OperateurC op : employeeBean.getEmployees())
 			if (interimaireSelected == op.getId()) {
 				conge.setInterimat(op);
-			} else
-				conge.setEmployee(op);
+				break;
+			}
 
 		conge.setState(1);
+		conge.setEmployee(operateurC);
+		if (operateurC.getReferant() != null)
+			conge.setReferant(operateurC.getReferant());
+		else {
+			conge.setReferant(operateurC.getReferant());
+		}
+
 		boolean saved = CongeDAO.saveOrUpdate(conge);
 
 		if (saved) {

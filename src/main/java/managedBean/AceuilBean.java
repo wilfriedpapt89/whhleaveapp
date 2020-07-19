@@ -26,10 +26,10 @@ public class AceuilBean {
 	private HttpSession mySession;
 	private ArrayList<Conge> allDemandesSentToMe;
 	private boolean interimat;
-	private ArrayList<Conge> allMyDemandesRejettes;
-	private ArrayList<Conge> allMyDemandesValides;
+	private ArrayList<Conge> allMyDemandes;
+	private ArrayList<Conge> allMyPendingDemandes;
 	private int allDemandesSentToMeSize;
-	private String monCongeStatut;
+	private String mesCongeStatut;
 	private String interimatStatut;
 	private OperateurC monCompte;
 
@@ -51,8 +51,10 @@ public class AceuilBean {
 
 		mySession = Utilitaire.getSession();
 		monCompte = (OperateurC) mySession.getAttribute("sessionUser");
-		monCongeStatut = "";
+		mesCongeStatut = "";
 		interimatStatut = "";
+		allMyDemandes = new ArrayList<>();
+		allMyPendingDemandes = new ArrayList<>();
 		loadAllDemandeSent();
 	}
 
@@ -66,43 +68,45 @@ public class AceuilBean {
 				if (monCompte.getId() == c.getReferant().getId()) {
 					allDemandesSentToMe.add(c);
 				}
-			if (c.getEmployee().getId() == monCompte.getId()) {
-				monCongeStatut = "Mon congé n'est pas encore validé.";
-			}
 		}
 		allDemandesSentToMeSize = allDemandesSentToMe.size();
 		loadMesDemandesValides();
+		checkForMyDemande();
 	}
 
 	public void loadMesDemandesValides() {
 
-		allMyDemandesValides = new ArrayList<Conge>();
+		allMyDemandes.clear();
+		allMyPendingDemandes.clear();
 
-		for (Conge c : appManagerBean.getCongesValides()) {
+		for (Conge c : appManagerBean.getDemandeConges()) {
 			if (monCompte.getId() == c.getEmployee().getId()) {
-				allMyDemandesValides.add(c);
-				monCongeStatut = "Congé accepté";
+				allMyPendingDemandes.add(0, c);
+
 			}
 		}
 
-		if (!monCongeStatut.equalsIgnoreCase("Mon congé n'est pas encore validé.")
-				&& !monCongeStatut.equalsIgnoreCase("Congé accepté")) {
-			monCongeStatut = "Pas de demande de congé";
+		if (allMyPendingDemandes.size() == 1) {
+			mesCongeStatut = allMyPendingDemandes.size() + " demande en cours";
+		} else if (allMyPendingDemandes.size() > 1) {
+			mesCongeStatut = allMyPendingDemandes.size() + " demandes en cours";
+		} else if (allMyPendingDemandes.size() < 1) {
+			mesCongeStatut = "Pas de demande";
 		}
 
 	}
 
-	public void loadMesDemandesRejettes() {
-
-		allMyDemandesRejettes = new ArrayList<Conge>();
-		monCompte = (OperateurC) mySession.getAttribute("sessionUser");
-
-		for (Conge c : appManagerBean.getCongesValides()) {
-			if (monCompte.getId() == c.getEmployee().getId()) {
-				allMyDemandesRejettes.add(c);
-			}
-		}
-	}
+	// public void loadMesDemandesRejettes() {
+	//
+	// allMyDemandesRejettes = new ArrayList<Conge>();
+	// monCompte = (OperateurC) mySession.getAttribute("sessionUser");
+	//
+	// for (Conge c : appManagerBean.getCongesValides()) {
+	// if (monCompte.getId() == c.getEmployee().getId()) {
+	// allMyDemandesRejettes.add(c);
+	// }
+	// }
+	// }
 
 	public void checkStatus() {
 
@@ -116,8 +120,16 @@ public class AceuilBean {
 
 		if (appManagerBean.checkNotification(monCompte) > 0) {
 			loadAllDemandeSent();
-			Utilitaire.updateComponents(Arrays.asList("form1:analysedemande", "form1:analysedemande"));
+			Utilitaire.updateComponents(Arrays.asList("form1:analysedemande", " form1:mesconges"));
 		}
+	}
+
+	public void checkForMyDemande() {
+
+		if (appManagerBean.getCongesValides() != null && !appManagerBean.getCongesValides().isEmpty())
+			for (Conge c : appManagerBean.getCongesValides())
+				if (c.getEmployee().getId() == monCompte.getId())
+					allMyDemandes.add(c);
 	}
 
 	public void changestateConge() {
@@ -127,17 +139,13 @@ public class AceuilBean {
 
 			Conge copyConge = new Conge(congeSelected);
 
-			if (state == 2) {
-				copyConge.setState(state);
-				copyConge.setDateValidation(Calendar.getInstance().getTime());
-				copyConge.setMotifValidation(motifDecision);
-			} else if (state == 3) {
-				copyConge.setState(state);
-				copyConge.setDateValidation(Calendar.getInstance().getTime());
-				copyConge.setMotifRejet(motifDecision);
-
+			if (motifDecision == null || !motifDecision.isEmpty()) {
+				motifDecision = "Pas de motif précisé.";
 			}
 
+			copyConge.setState(state);
+			copyConge.setDateValidation(Calendar.getInstance().getTime());
+			copyConge.setMotifValidation(motifDecision);
 			boolean saved = CongeDAO.saveOrUpdate(copyConge);
 
 			if (saved) {
@@ -161,16 +169,9 @@ public class AceuilBean {
 
 			Conge copyConge = new Conge(congeSelected);
 
-			if (state == 2) {
-				copyConge.setState(state);
-				copyConge.setDateValidation(Calendar.getInstance().getTime());
-				copyConge.setMotifValidation(motifDecision);
-			} else if (state == 3) {
-				copyConge.setState(state);
-				copyConge.setDateValidation(Calendar.getInstance().getTime());
-				copyConge.setMotifRejet(motifDecision);
-
-			}
+			copyConge.setState(state);
+			copyConge.setDateValidation(Calendar.getInstance().getTime());
+			copyConge.setMotifRejet(motifDecision);
 
 			boolean saved = CongeDAO.saveOrUpdate(copyConge);
 
@@ -220,20 +221,36 @@ public class AceuilBean {
 		this.interimat = interimat;
 	}
 
-	public ArrayList<Conge> getAllMyDemandesRejettes() {
-		return allMyDemandesRejettes;
+	public ArrayList<Conge> getAllMyDemandes() {
+		return allMyDemandes;
 	}
 
-	public void setAllMyDemandesRejettes(ArrayList<Conge> allMyDemandesRejettes) {
-		this.allMyDemandesRejettes = allMyDemandesRejettes;
+	public void setAllMyDemandes(ArrayList<Conge> allMyDemandes) {
+		this.allMyDemandes = allMyDemandes;
+	}
+
+	public ArrayList<Conge> getAllMyPendingDemandes() {
+		return allMyPendingDemandes;
+	}
+
+	public void setAllMyPendingDemandes(ArrayList<Conge> allMyPendingDemandes) {
+		this.allMyPendingDemandes = allMyPendingDemandes;
+	}
+
+	public String getMesCongeStatut() {
+		return mesCongeStatut;
+	}
+
+	public void setMesCongeStatut(String mesCongeStatut) {
+		this.mesCongeStatut = mesCongeStatut;
 	}
 
 	public ArrayList<Conge> getAllMyDemandesValides() {
-		return allMyDemandesValides;
+		return allMyDemandes;
 	}
 
 	public void setAllMyDemandesValides(ArrayList<Conge> allMyDemandesValides) {
-		this.allMyDemandesValides = allMyDemandesValides;
+		this.allMyDemandes = allMyDemandesValides;
 	}
 
 	public int getAllDemandesSentToMeSize() {
@@ -245,11 +262,11 @@ public class AceuilBean {
 	}
 
 	public String getMonCongeStatut() {
-		return monCongeStatut;
+		return mesCongeStatut;
 	}
 
 	public void setMonCongeStatut(String monCongeStatut) {
-		this.monCongeStatut = monCongeStatut;
+		this.mesCongeStatut = monCongeStatut;
 	}
 
 	public String getInterimatStatut() {

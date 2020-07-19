@@ -47,7 +47,8 @@
 		<h:form id="form1">
 			<p:poll onstart="checkNotification()" interval="10" autoStart="true"
 				partialSubmit="true" process="@this">
-
+				<p:remoteCommand name="updatedemande" update="mesdemandes" />
+				<p:remoteCommand name="mescongesload" update="mescongepan" />
 			</p:poll>
 			<p:remoteCommand name="checkNotification" immediate="true"
 				action="#{aceuilBean.checkNotification()}" />
@@ -58,7 +59,7 @@
 							<div class="ui-g-12 ui-md-4">
 								<div class="ui-g card colorbox colorbox-1">
 									<div class="ui-g-4">
-										<i class="material-icons">&#xE86C;</i>
+										<a onclick="updatedemande()"><i class="material-icons">&#xE86C;</i></a>
 									</div>
 									<h:panelGroup id="analysedemande" layout="block"
 										styleClass="ui-g-8">
@@ -71,12 +72,12 @@
 							<div class="ui-g-12 ui-md-4">
 								<div class="ui-g card colorbox colorbox-2">
 									<div class="ui-g-4">
-										<i class="material-icons">&#xE86C;</i>
+										<a onclick="mescongesload()"><i class="material-icons">&#xE86C;</i></a>
 									</div>
-									<div class="ui-g-8">
-										<span class="colorbox-name">Mon congé</span> <span
-											style="color: white">#{aceuilBean.monCongeStatut}</span>
-									</div>
+									<h:panelGroup id="mesconges" layout="block" styleClass="ui-g-8">
+										<span class="colorbox-name">Mes congés</span>
+										<span style="color: white">#{aceuilBean.mesCongeStatut}</span>
+									</h:panelGroup>
 								</div>
 							</div>
 
@@ -98,16 +99,33 @@
 					<div class="ui-g">
 
 						<div class="ui-g-12 ui-md-6">
-							<p:panel header="Mon congé"></p:panel>
+							<p:panel id="mescongepan" header="Mon congé" toggleable="true"
+								toggleSpeed="500">
+								<p:dataScroller var="cong" value="#{aceuilBean.allMyDemandes}">
+									<h:panelGroup styleClass="shadow-box ui-shadow-2"
+										style="dislay:block;width:100%" layout="block">
+										<div class="ui-g">
+											<div class="ui-g-4">
+												<span>#{cong.dateDebutString}</span>
+											</div>
+											<div class="ui-g-4"></div>
+											<div class="ui-g-4">
+												<span>#{cong.statutLibelle}</span>
+											</div>
+										</div>
+									</h:panelGroup>
+								</p:dataScroller>
+							</p:panel>
 						</div>
 						<div class="ui-g-12 ui-md-6">
-							<p:panel header="Mon intérimat"></p:panel>
+							<p:panel header="Mon intérimat" toggleable="true"
+								toggleSpeed="500"></p:panel>
 						</div>
 						<div class="ui-g-12 ui-fluid">
 							<p:panel header="Demande(s) à analyser" id="mesdemandes">
 								<div class="ui-g">
 									<div class="ui-g-12 ui-md-8">
-										<p:dataTable var="dem" rowKey="#{dem.id}"
+										<p:dataTable id="analysedemande2" var="dem" rowKey="#{dem.id}"
 											value="#{aceuilBean.allDemandesSentToMe}"
 											selection="#{aceuilBean.congeSelected}"
 											selectionMode="single"
